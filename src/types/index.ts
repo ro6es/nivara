@@ -9,11 +9,17 @@ export interface Section {
 export interface Priority {
   level: PriorityLevel;
   score: number; // 0–10
+  /** Section code that set the score, when the backend reports one. */
+  driver?: string;
+  /** Human-readable one-line justification, e.g. "Driven by Section 392: severity 8 x confidence 0.87 = 7". */
+  basis?: string;
 }
 
 export interface Routing {
   unit: string;
   reason: string;
+  /** Section code that determined routing, when the backend reports one. */
+  matched_section?: string;
 }
 
 export interface ExplanationToken {

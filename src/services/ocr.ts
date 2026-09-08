@@ -18,11 +18,16 @@ export async function scanDocument(file: File | Blob, onProgress?: (fraction: nu
       const form = new FormData();
       form.append("image", file);
       const res = await fetch(`${API_BASE_URL}/api/scan`, { method: "POST", body: form });
-      if (!res.ok) {
+      if (res.status === 404) {
+        // The backend doesn't implement server-side OCR (yet, or at all) —
+        // fall through to client-side OCR rather than treating this as a
+        // failure. Any other non-2xx status is a real, reported failure.
+      } else if (!res.ok) {
         const body = (await res.json().catch(() => null)) as { error?: string } | null;
         throw new ScanError(body?.error ?? "The document scanning service could not be reached.");
+      } else {
+        return (await res.json()) as ScanResult;
       }
-      return (await res.json()) as ScanResult;
     } catch (err) {
       if (err instanceof ScanError) throw err;
       // Network failure — fall through to client-side OCR below.

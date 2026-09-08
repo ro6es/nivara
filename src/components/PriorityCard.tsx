@@ -22,7 +22,7 @@ export default function PriorityCard({ priority }: PriorityCardProps) {
         <div className="mt-2 mb-3">
           <StatusBadge level={priority.level} />
         </div>
-        <p className="text-sm text-mercury max-w-xs">Rule-based priority assessment</p>
+        <p className="text-sm text-mercury max-w-xs">{priority.basis ?? "Rule-based priority assessment"}</p>
       </div>
     </motion.div>
   );
